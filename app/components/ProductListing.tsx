@@ -8,7 +8,6 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { toast } from "@/components/ui/use-toast"
-import { sendOrderConfirmation } from "../actions/sendOrderConfirmation"
 
 const products = [
   { id: "prod_1", name: "Tiens Sanitary Napkins- Day Use", price: 195, image: "/DAY USE.jpg" },
@@ -53,7 +52,7 @@ export default function ProductListing() {
     setCustomerInfo((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     const orderItems = Object.entries(quantities)
       .filter(([_, quantity]) => quantity > 0)
       .map(([productId, quantity]) => {
@@ -75,28 +74,74 @@ export default function ProductListing() {
     setOrderSummary(summary)
     setIsDialogOpen(true)
     setIsPaymentConfirmed(false)
-    toast({
-      title: "Order Placed",
-      description: "Your order has been placed successfully.",
-    })
+
+    // Send order details to Web3Forms
+    try {
+      const formData = new FormData()
+      formData.append('access_key', 'YOUR-WEB3FORMS-ACCESS-KEY') // Replace with your Web3Forms access key
+      formData.append('name', customerInfo.name)
+      formData.append('mobile', customerInfo.mobile)
+      formData.append('address', customerInfo.address)
+      formData.append('order_summary', summary)
+      formData.append('total_price', total.toString())
+
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: formData
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        toast({
+          title: "Order Placed",
+          description: "Your order has been placed successfully.",
+        })
+      } else {
+        throw new Error('Failed to submit form')
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "There was an error placing your order. Please try again.",
+        variant: "destructive"
+      })
+    }
   }
 
   const handleConfirmPayment = async () => {
-    const result = await sendOrderConfirmation(customerInfo, orderSummary, totalPrice)
-    if (result.success) {
-      setIsPaymentConfirmed(true)
-      toast({
-        title: "Payment Confirmed",
-        description: "Your payment has been confirmed and the order details have been recorded.",
+    try {
+      const formData = new FormData()
+      formData.append('access_key', 'YOUR-WEB3FORMS-ACCESS-KEY') // Replace with your Web3Forms access key
+      formData.append('name', customerInfo.name)
+      formData.append('mobile', customerInfo.mobile)
+      formData.append('address', customerInfo.address)
+      formData.append('order_summary', orderSummary)
+      formData.append('total_price', totalPrice.toString())
+      formData.append('payment_status', 'Confirmed')
+
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: formData
       })
-    } else {
+
+      const data = await response.json()
+
+      if (data.success) {
+        setIsPaymentConfirmed(true)
+        toast({
+          title: "Payment Confirmed",
+          description: "Your payment has been confirmed and the order details have been recorded.",
+        })
+      } else {
+        throw new Error('Failed to confirm payment')
+      }
+    } catch (error) {
       toast({
-        title: "Payment Confirmed",
-        description:
-          "Your payment has been confirmed, but there was an issue sending the confirmation email. Your order has been recorded.",
-        variant: "default",
+        title: "Error",
+        description: "There was an error confirming your payment. Please try again.",
+        variant: "destructive"
       })
-      setIsPaymentConfirmed(true)
     }
   }
 
