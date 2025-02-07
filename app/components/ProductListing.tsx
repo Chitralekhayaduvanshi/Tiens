@@ -50,7 +50,14 @@ export default function ProductListing() {
 
   const handleCustomerInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setCustomerInfo((prev) => ({ ...prev, [name]: value }))
+    
+    if (name === 'mobile') {
+      // Only allow numbers and limit to 10 digits
+      const numbersOnly = value.replace(/\D/g, '').slice(0, 10)
+      setCustomerInfo((prev) => ({ ...prev, mobile: numbersOnly }))
+    } else {
+      setCustomerInfo((prev) => ({ ...prev, [name]: value }))
+    }
   }
 
   const handleCheckout = async () => {
@@ -207,8 +214,16 @@ export default function ProductListing() {
                 type="tel"
                 value={customerInfo.mobile}
                 onChange={handleCustomerInfoChange}
+                placeholder="Enter 10 digit mobile number"
+                pattern="[0-9]{10}"
+                maxLength={10}
                 required
               />
+              {customerInfo.mobile && customerInfo.mobile.length !== 10 && (
+                <p className="text-sm text-red-500 mt-1">
+                  Please enter a valid 10-digit mobile number
+                </p>
+              )}
             </div>
             <div>
               <Label htmlFor="address">Address</Label>
@@ -236,7 +251,13 @@ export default function ProductListing() {
         <Button
           onClick={handleCheckout}
           className="w-full"
-          disabled={totalItems === 0 || !customerInfo.name || !customerInfo.mobile || !customerInfo.address}
+          disabled={
+            totalItems === 0 || 
+            !customerInfo.name || 
+            !customerInfo.mobile || 
+            customerInfo.mobile.length !== 10 || 
+            !customerInfo.address
+          }
         >
           Place Order
         </Button>
