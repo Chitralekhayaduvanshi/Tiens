@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { toast } from "@/components/ui/use-toast"
+import { CheckCircle } from "lucide-react"
 
 const products = [
   { id: "prod_1", name: "Tiens Sanitary Napkins- Day Use", price: 195, image: "/DAY USE.jpg" },
@@ -241,41 +242,85 @@ export default function ProductListing() {
         </Button>
       </div>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
-            <DialogTitle>Order Confirmation</DialogTitle>
-            <DialogDescription>
-              Your order has been placed successfully. Please complete the payment using the image below.
+            <DialogTitle className="text-2xl font-bold text-center">Order Details</DialogTitle>
+            <DialogDescription className="text-center text-lg mt-2">
+              Please review your order details below
             </DialogDescription>
           </DialogHeader>
-          <div className="mt-4">
-            <h3 className="font-semibold mb-2">Customer Information:</h3>
-            <p>Name: {customerInfo.name}</p>
-            <p>Mobile: {customerInfo.mobile}</p>
-            <p>Address: {customerInfo.address}</p>
+          
+          <div className="grid gap-6 py-4">
+            <div className="space-y-2">
+              <h3 className="font-semibold text-lg">Customer Information</h3>
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                <div>
+                  <span className="font-medium">Name:</span>
+                  <span className="ml-2">{customerInfo.name}</span>
+                </div>
+                <div>
+                  <span className="font-medium">Mobile:</span>
+                  <span className="ml-2">{customerInfo.mobile}</span>
+                </div>
+                <div className="col-span-2">
+                  <span className="font-medium">Address:</span>
+                  <span className="ml-2">{customerInfo.address}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="font-semibold text-lg">Order Summary</h3>
+              <div className="bg-gray-50 p-4 rounded-lg space-y-2">
+                {orderSummary.split('\n').map((line, index) => (
+                  <div key={index} className="text-sm">
+                    {line}
+                  </div>
+                ))}
+                <div className="border-t border-gray-200 mt-4 pt-4">
+                  <div className="flex justify-between font-semibold">
+                    <span>Total Amount:</span>
+                    <span>₹{totalPrice.toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="font-semibold text-lg">Payment Instructions</h3>
+              <div className="flex justify-center">
+                <Image
+                  src="/qr-code.jpg"
+                  alt="Payment QR Code"
+                  width={200}
+                  height={200}
+                  className="rounded-lg border border-gray-200"
+                />
+              </div>
+              <div className="text-center space-y-2">
+                <p className="text-sm text-gray-600">
+                  Scan the QR code above to make the payment
+                </p>
+                <p className="text-sm text-gray-600">
+                  After completing the payment, click the button below
+                </p>
+              </div>
+            </div>
+
+            <Button 
+              onClick={handleConfirmPayment} 
+              disabled={isPaymentConfirmed}
+              className="w-full"
+            >
+              {isPaymentConfirmed ? (
+                <span className="flex items-center gap-2">
+                  Payment Confirmed <CheckCircle className="h-4 w-4" />
+                </span>
+              ) : (
+                "Confirm Payment"
+              )}
+            </Button>
           </div>
-          <div className="mt-4">
-            <h3 className="font-semibold mb-2">Order Summary:</h3>
-            <pre className="bg-gray-100 p-2 rounded text-sm">
-              {orderSummary}
-              {"\n\n"}Total: ₹{totalPrice.toFixed(2)}
-            </pre>
-          </div>
-          <div className="flex justify-center mt-4">
-            <Image
-              src="/placeholder.svg?height=300&width=300"
-              alt="Payment QR Code"
-              width={300}
-              height={300}
-              className="rounded-lg"
-            />
-          </div>
-          <p className="text-center mt-4 text-sm text-gray-500">
-            After payment, please click the button below to confirm your payment.
-          </p>
-          <Button onClick={handleConfirmPayment} className="w-full mt-4" disabled={isPaymentConfirmed}>
-            {isPaymentConfirmed ? "Payment Confirmed" : "Confirm Payment"}
-          </Button>
         </DialogContent>
       </Dialog>
     </div>
