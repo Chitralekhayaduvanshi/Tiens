@@ -290,7 +290,7 @@ export default function ProductListing() {
               <h3 className="font-semibold text-lg">Payment Instructions</h3>
               <div className="flex justify-center">
                 <Image
-                  src="/qr-code.jpg"
+                  src="/QR_CY.jpeg"
                   alt="Payment QR Code"
                   width={200}
                   height={200}
