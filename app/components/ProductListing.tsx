@@ -78,7 +78,7 @@ export default function ProductListing() {
     // Send order details to Web3Forms
     try {
       const formData = new FormData()
-      formData.append('access_key', 'YOUR-WEB3FORMS-ACCESS-KEY') // Replace with your Web3Forms access key
+      formData.append('access_key', '74dd1247-0aec-492d-9ae2-5c880628132d') // Replace with your Web3Forms access key
       formData.append('name', customerInfo.name)
       formData.append('mobile', customerInfo.mobile)
       formData.append('address', customerInfo.address)
@@ -112,7 +112,7 @@ export default function ProductListing() {
   const handleConfirmPayment = async () => {
     try {
       const formData = new FormData()
-      formData.append('access_key', 'YOUR-WEB3FORMS-ACCESS-KEY') // Replace with your Web3Forms access key
+      formData.append('access_key', '74dd1247-0aec-492d-9ae2-5c880628132d') // Replace with your Web3Forms access key
       formData.append('name', customerInfo.name)
       formData.append('mobile', customerInfo.mobile)
       formData.append('address', customerInfo.address)
