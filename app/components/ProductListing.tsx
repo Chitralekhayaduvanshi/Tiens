@@ -11,18 +11,18 @@ import { toast } from "@/components/ui/use-toast"
 import { sendOrderConfirmation } from "../actions/sendOrderConfirmation"
 
 const products = [
-  { id: "prod_1", name: "Tiens Sanitary Napkins- Day Use", price: 195, image: ""\DAY USE.jpg"" },
+  { id: "prod_1", name: "Tiens Sanitary Napkins- Day Use", price: 195, image: "/DAY USE.jpg" },
   {
     id: "prod_2",
     name: "Tiens Sanitary Napkins- Night Use",
     price: 182,
-    image: ""\Night use.jpg"",
+    image: "/Night use.jpg",
   },
   {
     id: "prod_3",
     name: "Tiens Sanitary Napkins- Panty Liner",
     price: 298,
-    image: ""\Panty Liner.jpg"",
+    image: "/Panty Liner.jpg",
   },
 ]
 
