@@ -1,35 +1,37 @@
 "use server"
 
-import { Resend } from "resend"
+interface OrderItem {
+  name: string
+  quantity: number
+  price: number
+}
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
-export async function sendOrderSummary(email: string, orderItems: any[], total: number) {
-  const orderSummary = orderItems
-    .map(
-      (item) =>
-        `${item.name} - Quantity: ${item.quantity} - Price: $${((item.price * item.quantity) / 100).toFixed(2)}`,
-    )
-    .join("\n")
-
-  const emailContent = `
-    <h1>Order Summary</h1>
-    <p>Thank you for your order. Here's a summary of your purchase:</p>
-    <pre>${orderSummary}</pre>
-    <p><strong>Total: $${(total / 100).toFixed(2)}</strong></p>
-    <p>Please complete your payment using the payment image provided on the website.</p>
-  `
-
+export async function sendOrderSummary(email: string, orderItems: OrderItem[], total: number) {
   try {
-    await resend.emails.send({
-      from: "Tiens Store <orders@example.com>",
-      to: email,
-      subject: "Your Tiens Order Summary",
-      html: emailContent,
+    const formData = new FormData()
+    formData.append('access_key', '74dd1247-0aec-492d-9ae2-5c880628132d')
+    formData.append('email', email)
+    
+    const orderSummary = orderItems
+      .map(item => 
+        `${item.name} - Quantity: ${item.quantity} - Price: ₹${(item.price * item.quantity).toFixed(2)}`
+      )
+      .join("\n")
+    
+    formData.append('order_summary', orderSummary)
+    formData.append('total', total.toString())
+
+    const response = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      body: formData
     })
+
+    const data = await response.json()
+    return { success: data.success }
+    
   } catch (error) {
-    console.error("Failed to send email:", error)
-    throw new Error("Failed to send order summary email")
+    console.error("Failed to send order summary:", error)
+    return { success: false }
   }
 }
 
