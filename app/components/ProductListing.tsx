@@ -37,22 +37,22 @@ const products = [
     id: "prod_4",
     name: "Tiens Calcium Powder",
     price: 890,
-    image: "/calcium.jpg",
+    image: "/Tiens_Nutrient_Super_Calcium_Powder.jpg",
     description: "High-quality calcium supplement for bone health"
   },
   {
     id: "prod_5",
     name: "Tiens Spirulina",
     price: 750,
-    image: "/spirulina.jpg",
+    image: "/Spirulina_capsules_tiens.jpg",
     description: "Natural superfood rich in nutrients and antioxidants"
   },
   {
     id: "prod_6",
-    name: "Tiens Grape Extract",
+    name: "Tiens Revitize Amla and Neem Hair Oil",
     price: 680,
-    image: "/grape.jpg",
-    description: "Powerful antioxidant support from premium grape seeds"
+    image: "/Tiens Revitize Amla and Neem Hair Oil.jpg",
+    description: "It is a hair oil that can help with hair growth, dandruff, and hair fall. It can also help with hair strengthening, nourishment, and shine. "
   }
 ]
 
