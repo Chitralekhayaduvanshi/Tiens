@@ -9,6 +9,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { toast } from "@/components/ui/use-toast"
 import { CheckCircle } from "lucide-react"
+import { Textarea } from "@/components/ui/textarea"
 
 const products = [
   { id: "prod_1", name: "Tiens Sanitary Napkins- Day Use", price: 195, image: "/DAY USE.jpg" },
@@ -43,6 +44,9 @@ export default function ProductListing() {
     address: "",
   })
   const [isPaymentConfirmed, setIsPaymentConfirmed] = useState(false)
+  const [showFeedbackDialog, setShowFeedbackDialog] = useState(false)
+  const [feedback, setFeedback] = useState("")
+  const [rating, setRating] = useState<number>(0)
 
   const handleQuantityChange = (productId: string, quantity: number) => {
     setQuantities((prev) => ({ ...prev, [productId]: Math.max(0, quantity) }))
@@ -141,6 +145,7 @@ export default function ProductListing() {
           title: "Payment Confirmed",
           description: "Your payment has been confirmed and the order details have been recorded.",
         })
+        setShowFeedbackDialog(true)
       } else {
         throw new Error('Failed to confirm payment')
       }
@@ -148,6 +153,40 @@ export default function ProductListing() {
       toast({
         title: "Error",
         description: "There was an error confirming your payment. Please try again.",
+        variant: "destructive"
+      })
+    }
+  }
+
+  const handleFeedbackSubmit = async () => {
+    try {
+      const formData = new FormData()
+      formData.append('access_key', '74dd1247-0aec-492d-9ae2-5c880628132d')
+      formData.append('name', customerInfo.name)
+      formData.append('rating', rating.toString())
+      formData.append('feedback', feedback)
+
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: formData
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        toast({
+          title: "Thank You!",
+          description: "Your feedback has been submitted successfully.",
+        })
+        setShowFeedbackDialog(false)
+        setIsDialogOpen(false)
+      } else {
+        throw new Error('Failed to submit feedback')
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "There was an error submitting your feedback. Please try again.",
         variant: "destructive"
       })
     }
@@ -340,6 +379,54 @@ export default function ProductListing() {
               ) : (
                 "Confirm Payment"
               )}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={showFeedbackDialog} onOpenChange={setShowFeedbackDialog}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-center">Your Feedback</DialogTitle>
+            <DialogDescription className="text-center text-lg mt-2">
+              Please share your experience with us
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid gap-6 py-4">
+            <div className="space-y-2">
+              <Label>Rating</Label>
+              <div className="flex gap-2 justify-center">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Button
+                    key={star}
+                    variant={rating >= star ? "default" : "outline"}
+                    size="icon"
+                    onClick={() => setRating(star)}
+                    className="w-10 h-10"
+                  >
+                    ★
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="feedback">Your Comments</Label>
+              <Textarea
+                id="feedback"
+                placeholder="Tell us about your experience..."
+                value={feedback}
+                onChange={(e) => setFeedback(e.target.value)}
+                className="min-h-[100px]"
+              />
+            </div>
+
+            <Button 
+              onClick={handleFeedbackSubmit}
+              className="w-full"
+              disabled={!rating}
+            >
+              Submit Feedback
             </Button>
           </div>
         </DialogContent>
