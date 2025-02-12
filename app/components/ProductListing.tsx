@@ -32,7 +32,7 @@ const products = [
     price: 363,
     image: "/Tiens Revitize Amla and Neem Hair Oil.jpg",
     description: "It is a hair oil that can help with hair growth, dandruff, and hair fall. It can also help with hair strengthening, nourishment, and shine. "
-  }
+  },
   { 
     id: "prod_4", 
     name: "Tiens Sanitary Napkins- Day Use", 
@@ -53,7 +53,7 @@ const products = [
     price: 298,
     image: "/Panty Liner.jpg",
     description: "Light, daily freshness with ultra-thin design"
-  },
+  }
 ]
 
 interface CustomerInfo {
