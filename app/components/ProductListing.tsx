@@ -22,7 +22,7 @@ const products = [
   {
     id: "prod_2",
     name: "Tiens Spirulina",
-    price: 2,961,
+    price: 2961,
     image: "/Spirulina_capsules_tiens.jpg",
     description: "Natural superfood rich in nutrients and antioxidants"
   },
