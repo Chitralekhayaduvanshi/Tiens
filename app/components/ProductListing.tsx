@@ -12,48 +12,48 @@ import { CheckCircle } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 
 const products = [
+  {
+    id: "prod_1",
+    name: "Tiens Calcium Hydroxymethylbutyrate (HMB)",
+    price: 2344,
+    image: "/Tiens_Nutrient_Super_Calcium_Powder.jpg",
+    description: "High-quality calcium supplement for bone health"
+  },
+  {
+    id: "prod_2",
+    name: "Tiens Spirulina",
+    price: 2,961,
+    image: "/Spirulina_capsules_tiens.jpg",
+    description: "Natural superfood rich in nutrients and antioxidants"
+  },
+  {
+    id: "prod_3",
+    name: "Tiens Revitize Amla and Neem Hair Oil",
+    price: 363,
+    image: "/Tiens Revitize Amla and Neem Hair Oil.jpg",
+    description: "It is a hair oil that can help with hair growth, dandruff, and hair fall. It can also help with hair strengthening, nourishment, and shine. "
+  }
   { 
-    id: "prod_1", 
+    id: "prod_4", 
     name: "Tiens Sanitary Napkins- Day Use", 
     price: 195, 
     image: "/DAY USE.jpg",
     description: "Comfortable protection for daily use with advanced absorption technology"
   },
   {
-    id: "prod_2",
+    id: "prod_5",
     name: "Tiens Sanitary Napkins- Night Use",
     price: 182,
     image: "/Night use.jpg",
     description: "Extra protection for overnight comfort with extended coverage"
   },
   {
-    id: "prod_3",
+    id: "prod_6",
     name: "Tiens Sanitary Napkins- Panty Liner",
     price: 298,
     image: "/Panty Liner.jpg",
     description: "Light, daily freshness with ultra-thin design"
   },
-  {
-    id: "prod_4",
-    name: "Tiens Calcium Powder",
-    price: 890,
-    image: "/Tiens_Nutrient_Super_Calcium_Powder.jpg",
-    description: "High-quality calcium supplement for bone health"
-  },
-  {
-    id: "prod_5",
-    name: "Tiens Spirulina",
-    price: 750,
-    image: "/Spirulina_capsules_tiens.jpg",
-    description: "Natural superfood rich in nutrients and antioxidants"
-  },
-  {
-    id: "prod_6",
-    name: "Tiens Revitize Amla and Neem Hair Oil",
-    price: 680,
-    image: "/Tiens Revitize Amla and Neem Hair Oil.jpg",
-    description: "It is a hair oil that can help with hair growth, dandruff, and hair fall. It can also help with hair strengthening, nourishment, and shine. "
-  }
 ]
 
 interface CustomerInfo {
