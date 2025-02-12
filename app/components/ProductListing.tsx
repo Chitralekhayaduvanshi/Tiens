@@ -12,19 +12,48 @@ import { CheckCircle } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 
 const products = [
-  { id: "prod_1", name: "Tiens Sanitary Napkins- Day Use", price: 195, image: "/DAY USE.jpg" },
+  { 
+    id: "prod_1", 
+    name: "Tiens Sanitary Napkins- Day Use", 
+    price: 195, 
+    image: "/DAY USE.jpg",
+    description: "Comfortable protection for daily use with advanced absorption technology"
+  },
   {
     id: "prod_2",
     name: "Tiens Sanitary Napkins- Night Use",
     price: 182,
     image: "/Night use.jpg",
+    description: "Extra protection for overnight comfort with extended coverage"
   },
   {
     id: "prod_3",
     name: "Tiens Sanitary Napkins- Panty Liner",
     price: 298,
     image: "/Panty Liner.jpg",
+    description: "Light, daily freshness with ultra-thin design"
   },
+  {
+    id: "prod_4",
+    name: "Tiens Calcium Powder",
+    price: 890,
+    image: "/calcium.jpg",
+    description: "High-quality calcium supplement for bone health"
+  },
+  {
+    id: "prod_5",
+    name: "Tiens Spirulina",
+    price: 750,
+    image: "/spirulina.jpg",
+    description: "Natural superfood rich in nutrients and antioxidants"
+  },
+  {
+    id: "prod_6",
+    name: "Tiens Grape Extract",
+    price: 680,
+    image: "/grape.jpg",
+    description: "Powerful antioxidant support from premium grape seeds"
+  }
 ]
 
 interface CustomerInfo {
@@ -196,111 +225,146 @@ export default function ProductListing() {
   const orderTotal = products.reduce((sum, product) => sum + (quantities[product.id] || 0) * product.price, 0)
 
   return (
-    <div className="space-y-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="space-y-8 p-4 max-w-7xl mx-auto">
+      <div className="text-center space-y-4 mb-8">
+        <h1 className="text-4xl font-bold text-primary">Tiens Products</h1>
+        <p className="text-gray-600 max-w-2xl mx-auto">
+          Discover our range of high-quality health and wellness products
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {products.map((product) => (
-          <Card key={product.id}>
+          <Card key={product.id} className="hover:shadow-lg transition-shadow">
             <CardHeader>
-              <CardTitle>{product.name}</CardTitle>
+              <CardTitle className="text-xl font-bold line-clamp-2">{product.name}</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="aspect-square relative mb-4">
+            <CardContent className="space-y-4">
+              <div className="aspect-square relative mb-4 overflow-hidden rounded-lg">
                 <Image
                   src={product.image || "/placeholder.svg"}
                   alt={product.name}
                   fill
-                  className="object-cover rounded-md"
+                  className="object-cover hover:scale-105 transition-transform duration-300"
                 />
               </div>
-              <p className="text-2xl font-bold text-gray-900">₹{product.price.toFixed(2)}</p>
+              <p className="text-gray-600 text-sm line-clamp-2">{product.description}</p>
+              <div className="flex justify-between items-center">
+                <p className="text-2xl font-bold text-primary">₹{product.price.toFixed(2)}</p>
+                <div className="flex items-center space-x-2">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => handleQuantityChange(product.id, Math.max(0, (quantities[product.id] || 0) - 1))}
+                    disabled={!quantities[product.id]}
+                  >
+                    -
+                  </Button>
+                  <Input
+                    type="number"
+                    min="0"
+                    value={quantities[product.id] || 0}
+                    onChange={(e) => handleQuantityChange(product.id, Number.parseInt(e.target.value, 10))}
+                    className="w-16 text-center"
+                  />
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => handleQuantityChange(product.id, (quantities[product.id] || 0) + 1)}
+                  >
+                    +
+                  </Button>
+                </div>
+              </div>
             </CardContent>
-            <CardFooter>
-              <div className="flex items-center space-x-2">
-                <Label htmlFor={`quantity-${product.id}`} className="sr-only">
-                  Quantity
-                </Label>
-                <Input
-                  id={`quantity-${product.id}`}
-                  type="number"
-                  min="0"
-                  value={quantities[product.id] || 0}
-                  onChange={(e) => handleQuantityChange(product.id, Number.parseInt(e.target.value, 10))}
-                  className="w-20"
-                />
-                <Button onClick={() => handleQuantityChange(product.id, (quantities[product.id] || 0) + 1)}>
-                  Add to Cart
-                </Button>
-              </div>
-            </CardFooter>
           </Card>
         ))}
       </div>
-      <Card>
+
+      <Card className="mt-8 bg-gray-50">
         <CardHeader>
-          <CardTitle>Customer Information</CardTitle>
+          <CardTitle className="text-2xl">Customer Information</CardTitle>
         </CardHeader>
         <CardContent>
-          <form className="space-y-4">
-            <div>
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" name="name" value={customerInfo.name} onChange={handleCustomerInfoChange} required />
+          <form className="space-y-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="name" className="text-base">Full Name</Label>
+                <Input
+                  id="name"
+                  name="name"
+                  value={customerInfo.name}
+                  onChange={handleCustomerInfoChange}
+                  className="h-11"
+                  placeholder="Enter your full name"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="mobile" className="text-base">Mobile Number</Label>
+                <Input
+                  id="mobile"
+                  name="mobile"
+                  type="tel"
+                  value={customerInfo.mobile}
+                  onChange={handleCustomerInfoChange}
+                  placeholder="Enter 10 digit mobile number"
+                  pattern="[0-9]{10}"
+                  maxLength={10}
+                  className="h-11"
+                  required
+                />
+                {customerInfo.mobile && customerInfo.mobile.length !== 10 && (
+                  <p className="text-sm text-red-500">
+                    Please enter a valid 10-digit mobile number
+                  </p>
+                )}
+              </div>
             </div>
-            <div>
-              <Label htmlFor="mobile">Mobile Number</Label>
-              <Input
-                id="mobile"
-                name="mobile"
-                type="tel"
-                value={customerInfo.mobile}
-                onChange={handleCustomerInfoChange}
-                placeholder="Enter 10 digit mobile number"
-                pattern="[0-9]{10}"
-                maxLength={10}
-                required
-              />
-              {customerInfo.mobile && customerInfo.mobile.length !== 10 && (
-                <p className="text-sm text-red-500 mt-1">
-                  Please enter a valid 10-digit mobile number
-                </p>
-              )}
-            </div>
-            <div>
-              <Label htmlFor="address">Address</Label>
-              <Input
+            <div className="space-y-2">
+              <Label htmlFor="address" className="text-base">Delivery Address</Label>
+              <Textarea
                 id="address"
                 name="address"
                 value={customerInfo.address}
-                onChange={handleCustomerInfoChange}
+                onChange={(e) => setCustomerInfo(prev => ({ ...prev, address: e.target.value }))}
+                placeholder="Enter your complete delivery address"
+                className="min-h-[100px]"
                 required
               />
             </div>
           </form>
         </CardContent>
       </Card>
-      <div className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-2xl font-bold mb-4">Order Summary</h2>
-        <div className="flex justify-between mb-2">
-          <span>Total Items:</span>
-          <span>{totalItems}</span>
-        </div>
-        <div className="flex justify-between mb-4">
-          <span>Total Price:</span>
-          <span>₹{orderTotal.toFixed(2)}</span>
-        </div>
-        <Button
-          onClick={handleCheckout}
-          className="w-full"
-          disabled={
-            totalItems === 0 || 
-            !customerInfo.name || 
-            !customerInfo.mobile || 
-            customerInfo.mobile.length !== 10 || 
-            !customerInfo.address
-          }
-        >
-          Place Order
-        </Button>
-      </div>
+
+      <Card className="bg-primary/5">
+        <CardContent className="pt-6">
+          <div className="space-y-4">
+            <div className="flex justify-between items-center text-lg">
+              <span>Total Items:</span>
+              <span className="font-semibold">{totalItems}</span>
+            </div>
+            <div className="flex justify-between items-center text-xl">
+              <span>Total Amount:</span>
+              <span className="font-bold text-primary">₹{orderTotal.toFixed(2)}</span>
+            </div>
+            <Button
+              onClick={handleCheckout}
+              className="w-full h-12 text-lg"
+              disabled={
+                totalItems === 0 || 
+                !customerInfo.name || 
+                !customerInfo.mobile || 
+                customerInfo.mobile.length !== 10 || 
+                !customerInfo.address
+              }
+            >
+              Place Order
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
