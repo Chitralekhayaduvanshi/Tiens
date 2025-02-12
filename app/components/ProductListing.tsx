@@ -62,6 +62,9 @@ interface CustomerInfo {
   address: string
 }
 
+const DELIVERY_THRESHOLD = 2100
+const DELIVERY_CHARGE = 200
+
 export default function ProductListing() {
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({})
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -124,7 +127,8 @@ export default function ProductListing() {
       formData.append('mobile', customerInfo.mobile)
       formData.append('address', customerInfo.address)
       formData.append('order_summary', summary)
-      formData.append('total_price', total.toString())
+      formData.append('delivery_charge', DELIVERY_CHARGE.toString())
+      formData.append('total_price', (total + DELIVERY_CHARGE).toString())
 
       const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
@@ -158,7 +162,8 @@ export default function ProductListing() {
       formData.append('mobile', customerInfo.mobile)
       formData.append('address', customerInfo.address)
       formData.append('order_summary', orderSummary)
-      formData.append('total_price', totalPrice.toString())
+      formData.append('delivery_charge', DELIVERY_CHARGE.toString())
+      formData.append('total_price', (totalPrice + DELIVERY_CHARGE).toString())
       formData.append('payment_status', 'Confirmed')
 
       const response = await fetch('https://api.web3forms.com/submit', {
@@ -223,6 +228,8 @@ export default function ProductListing() {
 
   const totalItems = Object.values(quantities).reduce((sum, quantity) => sum + quantity, 0)
   const orderTotal = products.reduce((sum, product) => sum + (quantities[product.id] || 0) * product.price, 0)
+  const deliveryCharge = orderTotal >= DELIVERY_THRESHOLD ? 0 : DELIVERY_CHARGE
+  const finalTotal = orderTotal + deliveryCharge
 
   return (
     <div className="space-y-8 p-4 max-w-7xl mx-auto">
@@ -231,6 +238,11 @@ export default function ProductListing() {
         <p className="text-gray-600 max-w-2xl mx-auto">
           Discover our range of high-quality health and wellness products
         </p>
+        <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+          <p className="text-green-700 font-medium">
+            🚚 Free delivery on orders above ₹{DELIVERY_THRESHOLD.toFixed(2)}!
+          </p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -344,9 +356,28 @@ export default function ProductListing() {
               <span>Total Items:</span>
               <span className="font-semibold">{totalItems}</span>
             </div>
-            <div className="flex justify-between items-center text-xl">
-              <span>Total Amount:</span>
-              <span className="font-bold text-primary">₹{orderTotal.toFixed(2)}</span>
+            <div className="flex justify-between items-center">
+              <span>Subtotal:</span>
+              <span className="font-semibold">₹{orderTotal.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between items-center text-sm">
+              <span>Delivery Charge:</span>
+              {deliveryCharge === 0 ? (
+                <span className="text-green-600 font-medium">FREE</span>
+              ) : (
+                <span>₹{deliveryCharge.toFixed(2)}</span>
+              )}
+            </div>
+            {orderTotal > 0 && orderTotal < DELIVERY_THRESHOLD && (
+              <div className="text-sm text-green-600 text-center">
+                Add ₹{(DELIVERY_THRESHOLD - orderTotal).toFixed(2)} more for free delivery!
+              </div>
+            )}
+            <div className="border-t border-gray-200 pt-4">
+              <div className="flex justify-between items-center text-xl">
+                <span>Total Amount:</span>
+                <span className="font-bold text-primary">₹{finalTotal.toFixed(2)}</span>
+              </div>
             </div>
             <Button
               onClick={handleCheckout}
@@ -401,10 +432,22 @@ export default function ProductListing() {
                     {line}
                   </div>
                 ))}
-                <div className="border-t border-gray-200 mt-4 pt-4">
+                <div className="border-t border-gray-200 mt-4 pt-4 space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>Subtotal:</span>
+                    <span>₹{orderTotal.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Delivery Charge:</span>
+                    {deliveryCharge === 0 ? (
+                      <span className="text-green-600">FREE</span>
+                    ) : (
+                      <span>₹{deliveryCharge.toFixed(2)}</span>
+                    )}
+                  </div>
                   <div className="flex justify-between font-semibold">
                     <span>Total Amount:</span>
-                    <span>₹{totalPrice.toFixed(2)}</span>
+                    <span>₹{finalTotal.toFixed(2)}</span>
                   </div>
                 </div>
               </div>
