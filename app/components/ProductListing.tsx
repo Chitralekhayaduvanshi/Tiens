@@ -62,8 +62,40 @@ interface CustomerInfo {
   address: string
 }
 
+interface Testimonial {
+  id: string
+  name: string
+  rating: number
+  comment: string
+  date: string
+}
+
 const DELIVERY_THRESHOLD = 2100
 const DELIVERY_CHARGE = 200
+
+const initialTestimonials: Testimonial[] = [
+  {
+    id: "t1",
+    name: "Priya Singh",
+    rating: 5,
+    comment: "The calcium supplements have made a remarkable difference in my health. Excellent quality!",
+    date: "2024-02-15"
+  },
+  {
+    id: "t2",
+    name: "Rahul Sharma",
+    rating: 5,
+    comment: "Spirulina capsules are amazing. I feel more energetic throughout the day.",
+    date: "2024-02-10"
+  },
+  {
+    id: "t3",
+    name: "Anita Patel",
+    rating: 4,
+    comment: "The sanitary napkins are very comfortable and eco-friendly. Highly recommended!",
+    date: "2024-02-05"
+  }
+]
 
 export default function ProductListing() {
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({})
@@ -79,6 +111,7 @@ export default function ProductListing() {
   const [showFeedbackDialog, setShowFeedbackDialog] = useState(false)
   const [feedback, setFeedback] = useState("")
   const [rating, setRating] = useState<number>(0)
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(initialTestimonials)
 
   const handleQuantityChange = (productId: string, quantity: number) => {
     setQuantities((prev) => ({ ...prev, [productId]: Math.max(0, quantity) }))
@@ -208,6 +241,16 @@ export default function ProductListing() {
       const data = await response.json()
 
       if (data.success) {
+        // Add the new testimonial to the list
+        const newTestimonial: Testimonial = {
+          id: `t${Date.now()}`,
+          name: customerInfo.name,
+          rating,
+          comment: feedback,
+          date: new Date().toISOString().split('T')[0]
+        }
+        setTestimonials(prev => [newTestimonial, ...prev])
+
         toast({
           title: "Thank You!",
           description: "Your feedback has been submitted successfully.",
@@ -291,6 +334,35 @@ export default function ProductListing() {
             </CardContent>
           </Card>
         ))}
+      </div>
+
+      <div className="my-12">
+        <h2 className="text-3xl font-bold text-center mb-8">Customer Testimonials</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {testimonials.map((testimonial) => (
+            <Card key={testimonial.id} className="bg-white">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-lg font-semibold">{testimonial.name}</CardTitle>
+                    <p className="text-sm text-gray-500">{testimonial.date}</p>
+                  </div>
+                  <div className="flex gap-1">
+                    {Array.from({ length: testimonial.rating }).map((_, i) => (
+                      <span key={i} className="text-yellow-400">★</span>
+                    ))}
+                    {Array.from({ length: 5 - testimonial.rating }).map((_, i) => (
+                      <span key={i} className="text-gray-300">★</span>
+                    ))}
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 italic">"{testimonial.comment}"</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
 
       <Card className="mt-8 bg-gray-50">
@@ -501,6 +573,15 @@ export default function ProductListing() {
           
           <div className="grid gap-6 py-4">
             <div className="space-y-2">
+              <Label>Your Name</Label>
+              <Input
+                value={customerInfo.name}
+                disabled
+                className="bg-gray-50"
+              />
+            </div>
+
+            <div className="space-y-2">
               <Label>Rating</Label>
               <div className="flex gap-2 justify-center">
                 {[1, 2, 3, 4, 5].map((star) => (
@@ -531,7 +612,7 @@ export default function ProductListing() {
             <Button 
               onClick={handleFeedbackSubmit}
               className="w-full"
-              disabled={!rating}
+              disabled={!rating || !feedback.trim()}
             >
               Submit Feedback
             </Button>
