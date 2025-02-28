@@ -76,24 +76,38 @@ const DELIVERY_CHARGE = 200
 const initialTestimonials: Testimonial[] = [
   {
     id: "t1",
-    name: "Priya Singh",
+    name: "Nirmala Yadav",
     rating: 5,
-    comment: "The calcium supplements have made a remarkable difference in my health. Excellent quality!",
-    date: "2024-02-15"
+    comment: "I've been using Tiens Calcium for 3 months and my bone density has improved significantly. The results are amazing!",
+    date: "2024-02-20"
   },
   {
     id: "t2",
-    name: "Rahul Sharma",
+    name: "Rajesh Kumar",
     rating: 5,
-    comment: "Spirulina capsules are amazing. I feel more energetic throughout the day.",
-    date: "2024-02-10"
+    comment: "Tiens Spirulina has boosted my immunity and energy levels. I take it daily and feel much healthier now.",
+    date: "2024-02-18"
   },
   {
     id: "t3",
-    name: "Anita Patel",
+    name: "Chitralekha Yaduvanshi",
+    rating: 5,
+    comment: "The sanitary napkins are super comfortable and eco-friendly. I love that they're chemical-free & Biodegradable!",
+    date: "2024-02-15"
+  },
+  {
+    id: "t4",
+    name: "Amit Shah",
     rating: 4,
-    comment: "The sanitary napkins are very comfortable and eco-friendly. Highly recommended!",
-    date: "2024-02-05"
+    comment: "Hair oil has worked wonders for my hair fall problem. Seeing visible results in just 2 months.",
+    date: "2024-02-12"
+  },
+  {
+    id: "t5",
+    name: "Priya Malhotra",
+    rating: 5,
+    comment: "Quality products at reasonable prices. The delivery was quick and the customer service is excellent!",
+    date: "2024-02-10"
   }
 ]
 

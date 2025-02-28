@@ -25,7 +25,7 @@ export async function sendOrderSummary(email: string, orderItems: OrderItem[], t
       method: 'POST',
       body: formData
     })
-
+   
     const data = await response.json()
     return { success: data.success }
     
